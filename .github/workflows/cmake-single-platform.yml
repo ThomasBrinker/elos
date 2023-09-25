@@ -30,3 +30,7 @@ jobs:
       # Build your program with the given configuration
       run: safu/ci/build.sh
 
+
+    - name: Build Docs
+      # Build your program with the given configuration
+      run: safu/ci/build_doc.sh
