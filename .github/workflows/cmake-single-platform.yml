@@ -37,11 +37,11 @@ jobs:
           version: 1.0
 
     - name: Prep
-      run: echo "beautifulsoup4
-           sphinx 
-           sphinx-c-autodoc 
-           sphinx-copybutton 
-           sphinx-favicon 
+      run: echo "beautifulsoup4 \n
+           sphinx \
+           sphinx-c-autodoc \n
+           sphinx-copybutton \n
+           sphinx-favicon \n
            sphinxcontrib-programoutput" > requirements.txt
 
     - uses: actions/setup-python@v4
