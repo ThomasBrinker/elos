@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>safu/common.h &#8212; safu  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for safu/common.h</h1><div class="highlight"><pre>
+<span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;safu/defines.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;safu/types.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sys/socket.h&gt;</span>
+
+<div class="viewcode-block" id="c.safuStringIsEmpty"><a class="viewcode-back" href="../../generated/api/safu/common_h.html#c.safuStringIsEmpty">[docs]</a><span class="cm">/*******************************************************************</span>
+<span class="cm"> * Checks if the given string argument is empty. The given string</span>
+<span class="cm"> * is treated as empty if it is NULL or if it consists only of white spaces.</span>
+<span class="cm"> * White space characters are defined by libc&#39;s `isspace()` function</span>
+<span class="cm"> * like spaces, tab `\\t`, carriage return `\\r`, form feed `\f`</span>
+<span class="cm"> * newline `\\n`, vertical tab `\\v` etc.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Parameters:</span>
+<span class="cm"> *      stringToCheck (const char *): string to be checked.</span>
+<span class="cm"> * Returns:</span>
+<span class="cm"> *      - `SAFU_RESULT_OK` when the stringToCheck is empty</span>
+<span class="cm"> *      - `SAFU_RESULT_FAILED` when the stringToCheck is not empty</span>
+<span class="cm"> ******************************************************************/</span>
+<span class="n">safuResultE_t</span><span class="w"> </span><span class="nf">safuStringIsEmpty</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">stringToCheck</span><span class="p">);</span></div>
+
+<div class="viewcode-block" id="c.safuAllocMem"><a class="viewcode-back" href="../../generated/api/safu/common_h.html#c.safuAllocMem">[docs]</a><span class="cm">/*******************************************************************</span>
+<span class="cm"> * (re-)allocate Memory of a given size. This function is essentially a wrapper</span>
+<span class="cm"> * for the IOS C standard `realloc` command.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Parameters:</span>
+<span class="cm"> *      oldptr (void *): pointer to memory that should be reallocated (or NULL)</span>
+<span class="cm"> *      newlen (size_t): size of the newly allocated memory area</span>
+<span class="cm"> * Returns:</span>
+<span class="cm"> *      - pointer to newly allocated memory</span>
+<span class="cm"> ******************************************************************/</span>
+<span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="nf">safuAllocMem</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">oldptr</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">newlen</span><span class="p">);</span></div>
+
+<div class="viewcode-block" id="c.safuTransferExactly"><a class="viewcode-back" href="../../generated/api/safu/common_h.html#c.safuTransferExactly">[docs]</a><span class="cm">/*******************************************************************</span>
+<span class="cm"> * Allows to transfer a precise length of data using a given transfer method that</span>
+<span class="cm"> * would usually not allow to write that length of data with just one command.</span>
+<span class="cm"> * The primary purpose of this function is to be called by `safuSendExactly`</span>
+<span class="cm"> * and `safuRecvExactly`, since both use share a lot of the same code.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Parameters:</span>
+<span class="cm"> *      fd (int): file descriptor of the socket to/from which the data should be</span>
+<span class="cm"> *            transferred.</span>
+<span class="cm"> *      buf (void *): pointer to data to read from or write to.</span>
+<span class="cm"> *      len (size_t): length/amount of data to be transferred.</span>
+<span class="cm"> *      flags (int): flags for transfer method.</span>
+<span class="cm"> *      transferFunc (safuTransferFunc_t *): function to be called to actually</span>
+<span class="cm"> *                                           interact with file descriptor.</span>
+<span class="cm"> *      transfered (size_t *): length/amount of data which has been transferred.</span>
+<span class="cm"> * Returns:</span>
+<span class="cm"> *      - length of transferred data</span>
+<span class="cm"> *      - `SAFU_RESULT_OK` on success</span>
+<span class="cm"> *      - `SAFU_RESULT_CLOSED` if connection was closed by remote peer</span>
+<span class="cm"> *      - `SAFU_RESULT_FAILED&#39; on error, the connection state `fd` , `buf` and `transfered` is undefined</span>
+<span class="cm"> ******************************************************************/</span>
+<span class="n">safuResultE_t</span><span class="w"> </span><span class="nf">safuTransferExactly</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">fd</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">flags</span><span class="p">,</span><span class="w"> </span><span class="n">safuTransferFunc_t</span><span class="w"> </span><span class="o">*</span><span class="n">transferFunc</span><span class="p">,</span>
+<span class="w">                                  </span><span class="kt">size_t</span><span class="w"> </span><span class="o">*</span><span class="n">transferred</span><span class="p">);</span></div>
+
+<div class="viewcode-block" id="c.safuRecvExactly"><a class="viewcode-back" href="../../generated/api/safu/common_h.html#c.safuRecvExactly">[docs]</a><span class="cm">/*******************************************************************</span>
+<span class="cm"> * Obtain data from a file descriptor(socket) using `recv`.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Parameters:</span>
+<span class="cm"> *      fd (int): file descriptor of the socket from which the data should be</span>
+<span class="cm"> *            received to.</span>
+<span class="cm"> *      buf (void *): buffer to store the received data.</span>
+<span class="cm"> *      len (size_t): length/amount of data to be transferred.</span>
+<span class="cm"> *      flags (int): recv flags</span>
+<span class="cm"> *      transfered (size_t *): length/amount of data which has been transferred.</span>
+<span class="cm"> * Returns:</span>
+<span class="cm"> *      - length of received data</span>
+<span class="cm"> *      - `SAFU_RESULT_OK` on success</span>
+<span class="cm"> *      - `SAFU_RESULT_CLOSED` if connection was closed by remote peer</span>
+<span class="cm"> *      - `SAFU_RESULT_FAILED&#39; on error, the connection state `fd` , `buf` and `transfered` is undefined</span>
+<span class="cm"> ******************************************************************/</span>
+<span class="n">safuResultE_t</span><span class="w"> </span><span class="nf">safuRecvExactly</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">fd</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="o">*</span><span class="n">transferred</span><span class="p">);</span></div>
+
+<div class="viewcode-block" id="c.safuSendExactly"><a class="viewcode-back" href="../../generated/api/safu/common_h.html#c.safuSendExactly">[docs]</a><span class="cm">/*******************************************************************</span>
+<span class="cm"> * Send data to a file descriptor(socket) using `send`.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Parameters:</span>
+<span class="cm"> *      fd (int): file descriptor of the socket to which the data should be</span>
+<span class="cm"> *              send to.</span>
+<span class="cm"> *      buf (void *): pointer to data that should be transferred.</span>
+<span class="cm"> *      len (size_t): length/amount of data to be transferred.</span>
+<span class="cm"> *      flags (int): send flags</span>
+<span class="cm"> *      transfered (size_t *): length/amount of data which has been transferred.</span>
+<span class="cm"> * Returns:</span>
+<span class="cm"> *      - length of send data</span>
+<span class="cm"> *      - `SAFU_RESULT_OK` on success</span>
+<span class="cm"> *      - `SAFU_RESULT_CLOSED` if connection was closed by remote peer</span>
+<span class="cm"> *      - `SAFU_RESULT_FAILED&#39; on error, the connection state `fd` , `buf` and `transfered` is undefined</span>
+<span class="cm"> ******************************************************************/</span>
+<span class="n">safuResultE_t</span><span class="w"> </span><span class="nf">safuSendExactly</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">fd</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="o">*</span><span class="n">transferred</span><span class="p">);</span></div>
+
+<div class="viewcode-block" id="c.safuGetHardwareId"><a class="viewcode-back" href="../../generated/api/safu/common_h.html#c.safuGetHardwareId">[docs]</a><span class="cm">/*******************************************************************</span>
+<span class="cm"> * Get a string representing the hardware the system runs on from a file.</span>
+<span class="cm"> * The default location for this file is `/etc/machine-id`, which is defined by</span>
+<span class="cm"> * https://www.freedesktop.org/software/systemd/man/machine-id.html.</span>
+<span class="cm"> * If `/etc/machine-id` is not present, the value of the compile define</span>
+<span class="cm"> * `SAFU_HARDWAREID_DEFAULT_VALUE` will be used. The location of the hardware-id</span>
+<span class="cm"> * file can be overwritten by defining the environment variable</span>
+<span class="cm"> * `SAFU_HARDWAREID_FILE`.</span>
+<span class="cm"> *</span>
+<span class="cm"> * In Addition, it is possible to define the environment variable</span>
+<span class="cm"> * `SAFU_HARDWAREID_CACHE`. If it is set to `0`, the value of the hardware-id</span>
+<span class="cm"> * will be read on every call of the function. If it is set to any other value,</span>
+<span class="cm"> * the value of the first call will be cached and reused for every function</span>
+<span class="cm"> * call.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Parameters:</span>
+<span class="cm"> *      void</span>
+<span class="cm"> * Returns:</span>
+<span class="cm"> *      - string containing hardware id</span>
+<span class="cm"> ******************************************************************/</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="nf">safuGetHardwareId</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span></div>
+
+<div class="viewcode-block" id="c.safuReadFileToString"><a class="viewcode-back" href="../../generated/api/safu/common_h.html#c.safuReadFileToString">[docs]</a><span class="cm">/*******************************************************************</span>
+<span class="cm"> * Read the contents of a file and write it to a string buffer.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Parameters:</span>
+<span class="cm"> *      fileName (char *): String containing the path to the file to be read</span>
+<span class="cm"> *      maxLength (ssize_t): maximum size of file in bytes</span>
+<span class="cm"> *      string (char **): pointer to string that should contain the file contents,</span>
+<span class="cm"> *               on failure the pointer remains unchanged</span>
+<span class="cm"> * Returns:</span>
+<span class="cm"> *      - Amount of bytes that were written to `*string`</span>
+<span class="cm"> *      - `-1` if An error occurred during the function execution.</span>
+<span class="cm"> ******************************************************************/</span>
+<span class="kt">ssize_t</span><span class="w"> </span><span class="nf">safuReadFileToString</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">fileName</span><span class="p">,</span><span class="w"> </span><span class="kt">ssize_t</span><span class="w"> </span><span class="n">maxLength</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">string</span><span class="p">);</span></div>
+
+<div class="viewcode-block" id="c.safuGetFileSize"><a class="viewcode-back" href="../../generated/api/safu/common_h.html#c.safuGetFileSize">[docs]</a><span class="cm">/*******************************************************************</span>
+<span class="cm"> * Get the size of a file in bytes.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Parameters:</span>
+<span class="cm"> *      fd (int): file descriptor of file</span>
+<span class="cm"> * Returns:</span>
+<span class="cm"> *      - size of file in bytes</span>
+<span class="cm"> *      - `-1` on error</span>
+<span class="cm"> ******************************************************************/</span>
+<span class="kt">ssize_t</span><span class="w"> </span><span class="nf">safuGetFileSize</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">fd</span><span class="p">);</span></div>
+
+<div class="viewcode-block" id="c.safuGetEnvOr"><a class="viewcode-back" href="../../generated/api/safu/common_h.html#c.safuGetEnvOr">[docs]</a><span class="cm">/*******************************************************************</span>
+<span class="cm"> * Retrieve value of a environment variable. If the variable is not set, the</span>
+<span class="cm"> * function returns the provided default value.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Parameters:</span>
+<span class="cm"> *      key (const char *): name of environment variable</span>
+<span class="cm"> *      defaultValue (const char *): Default value to be returned, if the</span>
+<span class="cm"> *              environment variable is not defined</span>
+<span class="cm"> * Returns:</span>
+<span class="cm"> *      - value of the environment variable or default Value</span>
+<span class="cm"> ******************************************************************/</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="nf">safuGetEnvOr</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">defaultValue</span><span class="p">);</span></div>
+
+<div class="viewcode-block" id="c.safuWriteExactly"><a class="viewcode-back" href="../../generated/api/safu/common_h.html#c.safuWriteExactly">[docs]</a><span class="cm">/*******************************************************************</span>
+<span class="cm"> * Write data from buffer to file. This if the given buffer contains more</span>
+<span class="cm"> * bytes the can be written at once, the data will be written with multiple</span>
+<span class="cm"> * iterations until either an error occurs, or until the given length has been</span>
+<span class="cm"> * written.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Parameters:</span>
+<span class="cm"> *      fd (int): file descriptor of file to be written</span>
+<span class="cm"> *      buf (const void *): pointer to data buffer to write out</span>
+<span class="cm"> *      len (size_t): length of data to write out</span>
+<span class="cm"> * Returns:</span>
+<span class="cm"> *      - length of data that was written in byte</span>
+<span class="cm"> *      - `-1` on invalid parameters and set `errno` to `EINVAL`</span>
+<span class="cm"> ******************************************************************/</span>
+<span class="kt">ssize_t</span><span class="w"> </span><span class="nf">safuWriteExactly</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">fd</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">);</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">safu</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../generated/api/index.html">safu API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../generated/developer/index.html">Developer documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, wolfgang.gehrhardt@emlix.com.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

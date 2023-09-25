@@ -1,0 +1,5 @@
+common.h
+========
+
+.. autocmodule:: safu/common.h
+    :members:

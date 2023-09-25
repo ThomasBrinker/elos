@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>safu/mutex.h &#8212; safu  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for safu/mutex.h</h1><div class="highlight"><pre>
+<span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="cp">#ifndef LIBELOS_MUTEX_H</span>
+<div class="viewcode-block" id="c.LIBELOS_MUTEX_H"><span class="cp">#define LIBELOS_MUTEX_H</span></div>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;errno.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;pthread.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;semaphore.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;signal.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;log.h&quot;</span>
+
+<div class="viewcode-block" id="c.SAFU_PTHREAD_MUTEX_LOCK"><span class="cp">#define SAFU_PTHREAD_MUTEX_LOCK(__mutex, __fail_command)                  \</span>
+<span class="cp">    if (pthread_mutex_lock(__mutex) &lt; 0) {                                \</span>
+<span class="cp">        safuLogCritF(&quot;pthread_mutex_lock failed! - %s&quot;, strerror(errno)); \</span>
+<span class="cp">        raise(SIGTERM);                                                   \</span>
+<span class="cp">        __fail_command;                                                   \</span>
+<span class="cp">    }</span></div>
+
+<div class="viewcode-block" id="c.SAFU_PTHREAD_MUTEX_UNLOCK"><span class="cp">#define SAFU_PTHREAD_MUTEX_UNLOCK(__mutex, __fail_command)                  \</span>
+<span class="cp">    if (pthread_mutex_unlock(__mutex) &lt; 0) {                                \</span>
+<span class="cp">        safuLogCritF(&quot;pthread_mutex_unlock failed! - %s&quot;, strerror(errno)); \</span>
+<span class="cp">        raise(SIGTERM);                                                     \</span>
+<span class="cp">        __fail_command;                                                     \</span>
+<span class="cp">    }</span></div>
+
+<span class="c1">// We have to unlock the mutex here prior to destroying it to prevent undefined behavior according to POSIX</span>
+<div class="viewcode-block" id="c.SAFU_PTHREAD_MUTEX_DESTROY"><span class="cp">#define SAFU_PTHREAD_MUTEX_DESTROY(__mutex, __fail_command)                      \</span>
+<span class="cp">    if (pthread_mutex_unlock(__mutex) &lt; 0) {                                     \</span>
+<span class="cp">        safuLogCritF(&quot;pthread_mutex_unlock failed! - %s&quot;, strerror(errno));      \</span>
+<span class="cp">        raise(SIGTERM);                                                          \</span>
+<span class="cp">        __fail_command;                                                          \</span>
+<span class="cp">    } else {                                                                     \</span>
+<span class="cp">        if (pthread_mutex_destroy(__mutex) &lt; 0) {                                \</span>
+<span class="cp">            ;                                                                    \</span>
+<span class="cp">            safuLogCritF(&quot;pthread_mutex_destroy failed! - %s&quot;, strerror(errno)); \</span>
+<span class="cp">            raise(SIGTERM);                                                      \</span>
+<span class="cp">            __fail_command;                                                      \</span>
+<span class="cp">        }                                                                        \</span>
+<span class="cp">    }</span></div>
+
+<div class="viewcode-block" id="c.SAFU_SEM_UNLOCK"><span class="cp">#define SAFU_SEM_UNLOCK(__sem, __fail_command)                  \</span>
+<span class="cp">    if (sem_post(__sem) &lt; 0) {                                  \</span>
+<span class="cp">        safuLogCritF(&quot;sem_post failed! - %s&quot;, strerror(errno)); \</span>
+<span class="cp">        raise(SIGTERM);                                         \</span>
+<span class="cp">        __fail_command;                                         \</span>
+<span class="cp">    }</span></div>
+
+<div class="viewcode-block" id="c.SAFU_PTHREAD_MUTEX_INIT_WITH_RESULT"><span class="cp">#define SAFU_PTHREAD_MUTEX_INIT_WITH_RESULT(__mutex, __mutexattr, __result) \</span>
+<span class="cp">    if (pthread_mutex_init(__mutex, __mutexattr) &lt; 0) {                     \</span>
+<span class="cp">        (__result) = SAFU_RESULT_FAILED;                                    \</span>
+<span class="cp">        safuLogCritF(&quot;pthread_mutex_init failed! - %s&quot;, strerror(errno));   \</span>
+<span class="cp">        raise(SIGTERM);                                                     \</span>
+<span class="cp">    } else {                                                                \</span>
+<span class="cp">        (__result) = SAFU_RESULT_OK;                                        \</span>
+<span class="cp">    }</span></div>
+
+<div class="viewcode-block" id="c.SAFU_PTHREAD_MUTEX_LOCK_WITH_RESULT"><span class="cp">#define SAFU_PTHREAD_MUTEX_LOCK_WITH_RESULT(__mutex, __result)            \</span>
+<span class="cp">    if (pthread_mutex_lock(__mutex) &lt; 0) {                                \</span>
+<span class="cp">        (__result) = SAFU_RESULT_FAILED;                                  \</span>
+<span class="cp">        safuLogCritF(&quot;pthread_mutex_lock failed! - %s&quot;, strerror(errno)); \</span>
+<span class="cp">        raise(SIGTERM);                                                   \</span>
+<span class="cp">    } else {                                                              \</span>
+<span class="cp">        (__result) = SAFU_RESULT_OK;                                      \</span>
+<span class="cp">    }</span></div>
+
+<div class="viewcode-block" id="c.SAFU_PTHREAD_MUTEX_LOCK_WITH_RESULT_IF_OK"><span class="cp">#define SAFU_PTHREAD_MUTEX_LOCK_WITH_RESULT_IF_OK(__mutex, __result)          \</span>
+<span class="cp">    if ((__result) == SAFU_RESULT_OK) {                                       \</span>
+<span class="cp">        if (pthread_mutex_lock(__mutex) &lt; 0) {                                \</span>
+<span class="cp">            (__result) = SAFU_RESULT_FAILED;                                  \</span>
+<span class="cp">            safuLogCritF(&quot;pthread_mutex_lock failed! - %s&quot;, strerror(errno)); \</span>
+<span class="cp">            raise(SIGTERM);                                                   \</span>
+<span class="cp">        }                                                                     \</span>
+<span class="cp">    }</span></div>
+
+<span class="cp">#endif</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">safu</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../generated/api/index.html">safu API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../generated/developer/index.html">Developer documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, wolfgang.gehrhardt@emlix.com.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,5 @@
+ringbuffer.h
+============
+
+.. autocmodule:: safu/ringbuffer.h
+    :members:

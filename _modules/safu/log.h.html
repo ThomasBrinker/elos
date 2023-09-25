@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>safu/log.h &#8212; safu  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for safu/log.h</h1><div class="highlight"><pre>
+<span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="cp">#ifndef SAFU_LOG_H</span>
+<div class="viewcode-block" id="c.SAFU_LOG_H"><span class="cp">#define SAFU_LOG_H</span></div>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;errno.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdarg.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string.h&gt;</span>
+
+<div class="viewcode-block" id="c.safuLogFlags_t"><span class="k">typedef</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">safuLogFlags_t</span><span class="p">;</span></div>
+
+<div class="viewcode-block" id="c.SAFU_LOG_FLAG_WITH_POSITION"><span class="cp">#define SAFU_LOG_FLAG_WITH_POSITION   1</span></div>
+<div class="viewcode-block" id="c.SAFU_LOG_FLAG_WRITE_TO_STREAM"><span class="cp">#define SAFU_LOG_FLAG_WRITE_TO_STREAM 2</span></div>
+
+<div class="viewcode-block" id="c.safuLogStatusE"><div class="viewcode-block" id="c.safuLogStatusE_t"><span class="k">typedef</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">safuLogStatusE</span><span class="w"> </span><span class="p">{</span>
+<div class="viewcode-block" id="c.safuLogStatusE.SAFU_LOG_STATUS_SUCCESS"><div class="viewcode-block" id="c.safuLogStatusE_t.SAFU_LOG_STATUS_SUCCESS"><span class="w">    </span><span class="n">SAFU_LOG_STATUS_SUCCESS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span></div></div>
+<div class="viewcode-block" id="c.safuLogStatusE.SAFU_LOG_STATUS_ERROR"><div class="viewcode-block" id="c.safuLogStatusE_t.SAFU_LOG_STATUS_ERROR"><span class="w">    </span><span class="n">SAFU_LOG_STATUS_ERROR</span><span class="p">,</span></div></div>
+<span class="p">}</span><span class="w"> </span><span class="n">safuLogStatusE_t</span><span class="p">;</span></div></div>
+
+<div class="viewcode-block" id="c.safuLogLevelE"><div class="viewcode-block" id="c.safuLogLevelE_t"><span class="k">typedef</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">safuLogLevelE</span><span class="w"> </span><span class="p">{</span>
+<div class="viewcode-block" id="c.safuLogLevelE.SAFU_LOG_LEVEL_NONE"><div class="viewcode-block" id="c.safuLogLevelE_t.SAFU_LOG_LEVEL_NONE"><span class="w">    </span><span class="n">SAFU_LOG_LEVEL_NONE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span></div></div>
+<div class="viewcode-block" id="c.safuLogLevelE.SAFU_LOG_LEVEL_CRIT"><div class="viewcode-block" id="c.safuLogLevelE_t.SAFU_LOG_LEVEL_CRIT"><span class="w">    </span><span class="n">SAFU_LOG_LEVEL_CRIT</span><span class="p">,</span></div></div>
+<div class="viewcode-block" id="c.safuLogLevelE.SAFU_LOG_LEVEL_ERR"><div class="viewcode-block" id="c.safuLogLevelE_t.SAFU_LOG_LEVEL_ERR"><span class="w">    </span><span class="n">SAFU_LOG_LEVEL_ERR</span><span class="p">,</span></div></div>
+<div class="viewcode-block" id="c.safuLogLevelE.SAFU_LOG_LEVEL_WARN"><div class="viewcode-block" id="c.safuLogLevelE_t.SAFU_LOG_LEVEL_WARN"><span class="w">    </span><span class="n">SAFU_LOG_LEVEL_WARN</span><span class="p">,</span></div></div>
+<div class="viewcode-block" id="c.safuLogLevelE.SAFU_LOG_LEVEL_INFO"><div class="viewcode-block" id="c.safuLogLevelE_t.SAFU_LOG_LEVEL_INFO"><span class="w">    </span><span class="n">SAFU_LOG_LEVEL_INFO</span><span class="p">,</span></div></div>
+<div class="viewcode-block" id="c.safuLogLevelE.SAFU_LOG_LEVEL_DEBUG"><div class="viewcode-block" id="c.safuLogLevelE_t.SAFU_LOG_LEVEL_DEBUG"><span class="w">    </span><span class="n">SAFU_LOG_LEVEL_DEBUG</span><span class="p">,</span></div></div>
+<div class="viewcode-block" id="c.safuLogLevelE.SAFU_LOG_LEVEL_COUNT"><div class="viewcode-block" id="c.safuLogLevelE_t.SAFU_LOG_LEVEL_COUNT"><span class="w">    </span><span class="n">SAFU_LOG_LEVEL_COUNT</span><span class="p">,</span></div></div>
+<div class="viewcode-block" id="c.safuLogLevelE.SAFU_LOG_LEVEL_ALL"><div class="viewcode-block" id="c.safuLogLevelE_t.SAFU_LOG_LEVEL_ALL"><span class="w">    </span><span class="n">SAFU_LOG_LEVEL_ALL</span><span class="p">,</span></div></div>
+<div class="viewcode-block" id="c.safuLogLevelE.SAFU_LOG_LEVEL_INVALID"><div class="viewcode-block" id="c.safuLogLevelE_t.SAFU_LOG_LEVEL_INVALID"><span class="w">    </span><span class="n">SAFU_LOG_LEVEL_INVALID</span></div></div>
+<span class="p">}</span><span class="w"> </span><span class="n">safuLogLevelE_t</span><span class="p">;</span></div></div>
+
+<div class="viewcode-block" id="c.safuLogMessage"><div class="viewcode-block" id="c.safuLogMessage_t"><span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">safuLogMessage</span><span class="w"> </span><span class="p">{</span>
+<div class="viewcode-block" id="c.safuLogMessage.level"><div class="viewcode-block" id="c.safuLogMessage_t.level"><span class="w">    </span><span class="n">safuLogLevelE_t</span><span class="w"> </span><span class="n">level</span><span class="p">;</span></div></div>
+<div class="viewcode-block" id="c.safuLogMessage.file"><div class="viewcode-block" id="c.safuLogMessage_t.file"><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">file</span><span class="p">;</span></div></div>
+<div class="viewcode-block" id="c.safuLogMessage.func"><div class="viewcode-block" id="c.safuLogMessage_t.func"><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">func</span><span class="p">;</span></div></div>
+<div class="viewcode-block" id="c.safuLogMessage.line"><div class="viewcode-block" id="c.safuLogMessage_t.line"><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">line</span><span class="p">;</span></div></div>
+<div class="viewcode-block" id="c.safuLogMessage.fmt"><div class="viewcode-block" id="c.safuLogMessage_t.fmt"><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">fmt</span><span class="p">;</span></div></div>
+<div class="viewcode-block" id="c.safuLogMessage.ap"><div class="viewcode-block" id="c.safuLogMessage_t.ap"><span class="w">    </span><span class="kt">va_list</span><span class="w"> </span><span class="n">ap</span><span class="p">;</span></div></div>
+<span class="p">}</span><span class="w"> </span><span class="n">safuLogMessage_t</span><span class="p">;</span></div></div>
+
+<div class="viewcode-block" id="c.safuLogFuncCb_t"><span class="k">typedef</span><span class="w"> </span><span class="n">safuLogStatusE_t</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">safuLogFuncCb_t</span><span class="p">)(</span><span class="n">safuLogMessage_t</span><span class="w"> </span><span class="n">logMessage</span><span class="p">);</span></div>
+
+<div class="viewcode-block" id="c.safuLogLevelFromString"><span class="n">safuLogLevelE_t</span><span class="w"> </span><span class="nf">safuLogLevelFromString</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">logLevelStr</span><span class="p">);</span></div>
+<div class="viewcode-block" id="c.safuLogLevelToString"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="nf">safuLogLevelToString</span><span class="p">(</span><span class="n">safuLogLevelE_t</span><span class="w"> </span><span class="n">logLevel</span><span class="p">);</span></div>
+
+<div class="viewcode-block" id="c.safuLogGetStreamLevel"><span class="n">safuLogLevelE_t</span><span class="w"> </span><span class="nf">safuLogGetStreamLevel</span><span class="p">();</span></div>
+
+<div class="viewcode-block" id="c.safuLogSetPrefix"><span class="n">safuLogStatusE_t</span><span class="w"> </span><span class="nf">safuLogSetPrefix</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">prefix</span><span class="p">);</span></div>
+<div class="viewcode-block" id="c.safuLogSetStream"><span class="n">safuLogStatusE_t</span><span class="w"> </span><span class="nf">safuLogSetStream</span><span class="p">(</span><span class="n">safuLogLevelE_t</span><span class="w"> </span><span class="n">level</span><span class="p">,</span><span class="w"> </span><span class="kt">FILE</span><span class="w"> </span><span class="o">*</span><span class="n">stream</span><span class="p">);</span></div>
+<div class="viewcode-block" id="c.safuLogSetStreamLevel"><span class="n">safuLogStatusE_t</span><span class="w"> </span><span class="nf">safuLogSetStreamLevel</span><span class="p">(</span><span class="n">safuLogLevelE_t</span><span class="w"> </span><span class="n">level</span><span class="p">);</span></div>
+<div class="viewcode-block" id="c.safuLogSetFilterStr"><span class="n">safuLogStatusE_t</span><span class="w"> </span><span class="nf">safuLogSetFilterStr</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">filterStr</span><span class="p">);</span></div>
+<div class="viewcode-block" id="c.safuLogSetCallbackFunc"><span class="n">safuLogStatusE_t</span><span class="w"> </span><span class="nf">safuLogSetCallbackFunc</span><span class="p">(</span><span class="n">safuLogFuncCb_t</span><span class="w"> </span><span class="n">logCallbackFunc</span><span class="p">);</span></div>
+<div class="viewcode-block" id="c.safuLogFuncV"><span class="n">safuLogStatusE_t</span><span class="w"> </span><span class="nf">safuLogFuncV</span><span class="p">(</span><span class="n">safuLogLevelE_t</span><span class="w"> </span><span class="n">level</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">func</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">line</span><span class="p">,</span>
+<span class="w">                              </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">fmt</span><span class="p">,</span><span class="w"> </span><span class="kt">va_list</span><span class="w"> </span><span class="n">arg</span><span class="p">);</span></div>
+<div class="viewcode-block" id="c.safuLogFuncF"><span class="n">safuLogStatusE_t</span><span class="w"> </span><span class="nf">safuLogFuncF</span><span class="p">(</span><span class="n">safuLogLevelE_t</span><span class="w"> </span><span class="n">level</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">func</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">line</span><span class="p">,</span>
+<span class="w">                              </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">fmt</span><span class="p">,</span><span class="w"> </span><span class="p">...)</span><span class="w"> </span><span class="n">__attribute__</span><span class="p">((</span><span class="n">__format__</span><span class="p">(</span><span class="n">__printf__</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">)));</span></div>
+<div class="viewcode-block" id="c.safuLogFunc"><span class="n">safuLogStatusE_t</span><span class="w"> </span><span class="nf">safuLogFunc</span><span class="p">(</span><span class="n">safuLogLevelE_t</span><span class="w"> </span><span class="n">level</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">func</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">line</span><span class="p">,</span>
+<span class="w">                             </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">fmt</span><span class="p">)</span><span class="w"> </span><span class="n">__attribute__</span><span class="p">((</span><span class="n">__format__</span><span class="p">(</span><span class="n">__printf__</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)));</span></div>
+
+<div class="viewcode-block" id="c.safuLogCrit"><span class="cp">#define safuLogCrit(__message) safuLogFunc(SAFU_LOG_LEVEL_CRIT, __FILE__, __func__, __LINE__, __message)</span></div>
+<div class="viewcode-block" id="c.safuLogCritF"><span class="cp">#define safuLogCritF(__message, ...) \</span>
+<span class="cp">    safuLogFuncF(SAFU_LOG_LEVEL_CRIT, __FILE__, __func__, __LINE__, __message, __VA_ARGS__)</span></div>
+<div class="viewcode-block" id="c.safuLogErr"><span class="cp">#define safuLogErr(__message) safuLogFunc(SAFU_LOG_LEVEL_ERR, __FILE__, __func__, __LINE__, __message)</span></div>
+<div class="viewcode-block" id="c.safuLogErrF"><span class="cp">#define safuLogErrF(__message, ...) \</span>
+<span class="cp">    safuLogFuncF(SAFU_LOG_LEVEL_ERR, __FILE__, __func__, __LINE__, __message, __VA_ARGS__)</span></div>
+<div class="viewcode-block" id="c.safuLogErrValue"><span class="cp">#define safuLogErrValue(__message, __value) \</span>
+<span class="cp">    safuLogFuncF(SAFU_LOG_LEVEL_ERR, __FILE__, __func__, __LINE__, __message &quot; (returned: %d)&quot;, __value)</span></div>
+<div class="viewcode-block" id="c.safuLogErrErrno"><span class="cp">#define safuLogErrErrno(__message) \</span>
+<span class="cp">    safuLogFuncF(SAFU_LOG_LEVEL_ERR, __FILE__, __func__, __LINE__, __message &quot; - %s&quot;, strerror(errno))</span></div>
+<div class="viewcode-block" id="c.safuLogErrErrnoValue"><span class="cp">#define safuLogErrErrnoValue(__message, __value)                                                              \</span>
+<span class="cp">    safuLogFuncF(SAFU_LOG_LEVEL_ERR, __FILE__, __func__, __LINE__, __message &quot; (returned: %d - %s)&quot;, __value, \</span>
+<span class="cp">                 strerror(errno))</span></div>
+<div class="viewcode-block" id="c.safuLogWarn"><span class="cp">#define safuLogWarn(__message) safuLogFunc(SAFU_LOG_LEVEL_WARN, __FILE__, __func__, __LINE__, __message)</span></div>
+<div class="viewcode-block" id="c.safuLogWarnF"><span class="cp">#define safuLogWarnF(__message, ...) \</span>
+<span class="cp">    safuLogFuncF(SAFU_LOG_LEVEL_WARN, __FILE__, __func__, __LINE__, __message, __VA_ARGS__)</span></div>
+<div class="viewcode-block" id="c.safuLogWarnErrnoValue"><span class="cp">#define safuLogWarnErrnoValue(__message, __value)                                                              \</span>
+<span class="cp">    safuLogFuncF(SAFU_LOG_LEVEL_WARN, __FILE__, __func__, __LINE__, __message &quot; (returned: %d - %s)&quot;, __value, \</span>
+<span class="cp">                 strerror(errno))</span></div>
+<div class="viewcode-block" id="c.safuLogInfo"><span class="cp">#define safuLogInfo(__message) safuLogFunc(SAFU_LOG_LEVEL_INFO, __FILE__, __func__, __LINE__, __message)</span></div>
+<div class="viewcode-block" id="c.safuLogInfoF"><span class="cp">#define safuLogInfoF(__message, ...) \</span>
+<span class="cp">    safuLogFuncF(SAFU_LOG_LEVEL_INFO, __FILE__, __func__, __LINE__, __message, __VA_ARGS__)</span></div>
+<div class="viewcode-block" id="c.safuLogDebug"><span class="cp">#define safuLogDebug(__message) safuLogFunc(SAFU_LOG_LEVEL_DEBUG, __FILE__, __func__, __LINE__, __message)</span></div>
+<div class="viewcode-block" id="c.safuLogDebugF"><span class="cp">#define safuLogDebugF(__message, ...) \</span>
+<span class="cp">    safuLogFuncF(SAFU_LOG_LEVEL_DEBUG, __FILE__, __func__, __LINE__, __message, __VA_ARGS__)</span></div>
+
+<span class="cp">#endif</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">safu</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../generated/api/index.html">safu API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../generated/developer/index.html">Developer documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, wolfgang.gehrhardt@emlix.com.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>json.h &#8212; safu  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ringbuffer.h" href="ringbuffer_h.html" />
+    <link rel="prev" title="mutex.h" href="mutex_h.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="json-h">
+<h1>json.h<a class="headerlink" href="#json-h" title="Link to this heading">¶</a></h1>
+<p>// SPDX-License-Identifier: MIT</p>
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonAddNewArray">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonAddNewArray</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonAddNewArray" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonAddNewArray"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add an empty json array value to the given json object. This function is mostly
+a wrapper for json-c’s json_object_new_array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json Object to which an array should be added.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key to store the new array under.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>NULL</cite> in error case</p></li>
+<li><p>Pointer to json array</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonAddNewArrayOfInitialSize">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonAddNewArrayOfInitialSize</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">initialSize</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonAddNewArrayOfInitialSize" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonAddNewArrayOfInitialSize"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add an json array value with a given number of pre-allocated slots to the given
+json object. This function is mostly a wrapper for json-c’s
+json_object_new_array_ext.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json object to which an array should be added.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key to store the new array under.</p></li>
+<li><p><strong>initialSize</strong> (<span><span class="c-expr sig sig-inline c"><span class="kt">int</span></span></span>) – Number of array slots to allocate at creation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>NULL</cite> in error case</p></li>
+<li><p>Pointer to json array</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonAddNewInt">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonAddNewInt</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonAddNewInt" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonAddNewInt"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add an integer value to a given json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json object to which the integer should be added.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key to store the new integer under.</p></li>
+<li><p><strong>val</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">int32_t</span></span></span>) – Value to store in the object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>NULL</cite> in error case</p></li>
+<li><p>Pointer to json integer</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonAddNewInt64">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonAddNewInt64</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">int64_t</span></span><span class="w"> </span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonAddNewInt64" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonAddNewInt64"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add an long integer value to a given json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json object to which the int64 should be added.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key to store the new integer under.</p></li>
+<li><p><strong>val</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">int64_t</span></span></span>) – Value to store in the object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>NULL</cite> in error case</p></li>
+<li><p>Pointer to json int64</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonAddNewObject">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonAddNewObject</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonAddNewObject" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonAddNewObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add an new empty json object value to a given existing json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json object to which the new object should be added.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key to store the new object under.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>NULL</cite> in error case</p></li>
+<li><p>Pointer to new json object</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonAddNewString">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonAddNewString</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonAddNewString" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonAddNewString"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add an json string value to a given json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json object to which the string should be added.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key to store the new string under.</p></li>
+<li><p><strong>val</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – String to be stored in json object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>NULL</cite> in error case</p></li>
+<li><p>Pointer to new json object</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonAddNewTimestamp">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonAddNewTimestamp</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">timespec</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">timestamp</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonAddNewTimestamp" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonAddNewTimestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add Timestamp to an json object. A Timestamp is a json array containing two
+json int64 numbers, which encode the seconds and nanoseconds of a unix time
+stamp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – The json object, who’s timestamp is to be updated</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key the time stamp is stored under.</p></li>
+<li><p><strong>timestamp</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="n">timespec</span><span class="p">*</span></span></span>) – The timespec data to be encoded and stored.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>NULL</cite> in Error cases</p></li>
+<li><p>Pointer to the json array containing the timestamp.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonAddNewUint64">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonAddNewUint64</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">uint64_t</span></span><span class="w"> </span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonAddNewUint64" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonAddNewUint64"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add an long unsinged integer value to a given json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json object to which the uint64 should be added.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key to store the new integer under.</p></li>
+<li><p><strong>val</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">uint64_t</span></span></span>) – Value to store in the object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>NULL</cite> in error case</p></li>
+<li><p>Pointer to json uint64</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonAddObject">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonAddObject</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jdata</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonAddObject" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonAddObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add an existing json object as a value to another json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json object to which the the other json object should be added.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key to store the json object under.</p></li>
+<li><p><strong>jdata</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">uint64_t</span></span></span>) – Json object to store.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>&gt;= 0</cite> in success case</p></li>
+<li><p><cite>&lt; 0</cite> in error case</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonGetArray">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonGetArray</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">idx</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonGetArray" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonGetArray"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get a pointer to a json array stored inside an json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json object from which to read the json object.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key the json array is stored under,
+if the given json object is an object(map)</p></li>
+<li><p><strong>val</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">size_t</span></span></span>) – Index of the json array, if the given json object
+is an array</p></li>
+<li><p><strong>len</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">size_t</span><span class="p">*</span></span></span>) – Buffer to store the size of the stored json array</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>NULL</cite> in error case</p></li>
+<li><p>Pointer to the requested json array.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonGetInt32">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonGetInt32</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">idx</span></span>, <span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonGetInt32" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonGetInt32"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get the value of a 32-bit integer stored in a json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json object from which to read the integer.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key the int32 is stored under,
+if the given json object is an object(map)</p></li>
+<li><p><strong>val</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">int32_t</span><span class="p">*</span></span></span>) – Index of the int32, if the given json object
+is an array</p></li>
+<li><p><strong>val</strong> – Pointer to store the value in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>0</cite> in success case</p></li>
+<li><p><cite>-1</cite> in error case</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonGetInt64">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonGetInt64</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">idx</span></span>, <span class="n"><span class="pre">int64_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonGetInt64" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonGetInt64"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get the value of a 64-bit integer stored in a json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json object from which to read the integer.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key the int64 is stored under,
+if the given json object is an object(map)</p></li>
+<li><p><strong>val</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">int64_t</span><span class="p">*</span></span></span>) – Index of the int64, if the given json object
+is an array</p></li>
+<li><p><strong>val</strong> – Pointer to store the int64 in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>0</cite> in success case</p></li>
+<li><p><cite>-1</cite> in error case</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonGetObject">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonGetObject</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">idx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonGetObject" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonGetObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get a pointer to a json object stored inside another json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json object from which to read the json object.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key the json object is stored under,
+if the given json object is an object(map)</p></li>
+<li><p><strong>val</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">size_t</span></span></span>) – Index of the json object, if the given json object
+is an array</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>NULL</cite> in error case</p></li>
+<li><p>Pointer to the requested json object.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonGetString">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonGetString</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">idx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonGetString" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonGetString"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get the value of an string stored in a json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json object from which to read the uint.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key the string is stored under,
+if the given json object is an object(map)</p></li>
+<li><p><strong>val</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span><span class="p">*</span></span></span>) – Index of the string, if the given json object
+is an array</p></li>
+<li><p><strong>val</strong> – Pointer to store the value in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>0</cite> in success case</p></li>
+<li><p><cite>-1</cite> in error case</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonGetTimestamp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonGetTimestamp</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">idx</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">timespec</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">timestamp</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonGetTimestamp" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonGetTimestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Retrieve a timespec struct from an json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – The json object from which a timestamp is to be read</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key the timestamp is stored under,
+if the given json object is an object(map)</p></li>
+<li><p><strong>val</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">size_t</span><span class="p">*</span></span></span>) – Index of the timestamp, if the given json object
+is an array</p></li>
+<li><p><strong>timestamp</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="n">timespec</span><span class="p">*</span></span></span>) – The timespec in which the data should be stored</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>NULL</cite> in Error cases</p></li>
+<li><p>Pointer to the json array containing the timestamp.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><cite>0</cite> in success case</p></li>
+<li><p><cite>-1</cite> in error case</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonGetUint32">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonGetUint32</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">idx</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonGetUint32" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonGetUint32"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get the value of an unsigned 32-bit integer stored in a json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json object from which to read the uint.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key the uint is stored under,
+if the given json object is an object(map)</p></li>
+<li><p><strong>val</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">uint32_t</span><span class="p">*</span></span></span>) – Index of the uint, if the given json object
+is an array</p></li>
+<li><p><strong>val</strong> – Pointer to store the value in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>0</cite> in success case</p></li>
+<li><p><cite>-1</cite> in error case</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.safuJsonGetUint64">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">safuJsonGetUint64</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">json_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">jobj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">idx</span></span>, <span class="n"><span class="pre">uint64_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.safuJsonGetUint64" title="Link to this definition">¶</a><br /><a class="reference internal" href="../../../_modules/safu/json.h.html#c.safuJsonGetUint64"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get the value of an unsigned 64-bit integer stored in a json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jobj</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">json_object</span><span class="p">*</span></span></span>) – Json object from which to read the uint64.</p></li>
+<li><p><strong>name</strong> (<span><span class="c-expr sig sig-inline c"><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></span>) – Key the uint64 is stored under,
+if the given json object is an object(map)</p></li>
+<li><p><strong>val</strong> (<span><span class="c-expr sig sig-inline c"><span class="n">uint64_t</span><span class="p">*</span></span></span>) – Index of the uint64, if the given json object
+is an array</p></li>
+<li><p><strong>val</strong> – Pointer to store the uint64 in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><cite>0</cite> in success case</p></li>
+<li><p><cite>-1</cite> in error case</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">safu</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">safu API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="safu.html">safu</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">index</a><ul>
+  <li><a href="safu.html">safu</a><ul>
+      <li>Previous: <a href="mutex_h.html" title="previous chapter">mutex.h</a></li>
+      <li>Next: <a href="ringbuffer_h.html" title="next chapter">ringbuffer.h</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, wolfgang.gehrhardt@emlix.com.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../../../_sources/generated/api/safu/json_h.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
