@@ -23,10 +23,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: myci-actions/add-deb-repo@11
+      with:
+        repo: deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main
+        repo-name: llvm
+        keys-asc: https://apt.llvm.org/llvm-snapshot.gpg.key
+
     - uses: actions/checkout@v3
+    
     - uses: awalsh128/cache-apt-pkgs-action@latest
       with:
-          packages: binutils-dev build-essential clang-format clang-tidy cmake curl expat gdb git gnuplot jq libcmocka-dev libcsv-dev   libcurl4-openssl-dev      libesmtp-dev      libiberty-dev libjson-c-dev     liblog4c-dev     libmnl-dev     libsqlite3-0   libsqlite3-dev    libssl-dev    linux-tools-generic    locales    net-tools netcat  ninja-build openssl pandoc pandoc-plantuml-filter pkg-config python-is-python3 python3-pip python3-venv sqlite3 sudo wget zlib1g-dev 
+          packages: libclang1-16  binutils-dev build-essential clang-format clang-tidy cmake curl expat gdb git gnuplot jq libcmocka-dev libcsv-dev   libcurl4-openssl-dev      libesmtp-dev      libiberty-dev libjson-c-dev     liblog4c-dev     libmnl-dev     libsqlite3-0   libsqlite3-dev    libssl-dev    linux-tools-generic    locales    net-tools netcat  ninja-build openssl pandoc pandoc-plantuml-filter pkg-config python-is-python3 python3-pip python3-venv sqlite3 sudo wget zlib1g-dev 
           version: 1.0
           
     - name: Prep
@@ -40,15 +47,15 @@ jobs:
            sphinx-favicon 
            sphinxcontrib-programoutput
 
-    - name: Prep2
-      run: wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc 
-           && echo "# for llvm 16 packages"  | sudo tee -a /etc/apt/sources.list
-           && echo "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main"  | sudo tee -a /etc/apt/sources.list
-           && echo "deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main"  | sudo tee -a /etc/apt/sources.list
-           && cat  /etc/apt/sources.list
-           && sudo apt-get update 
-           && sudo apt-get install -y libclang1-16 
-           && sudo ln -s /usr/lib/x86_64-linux-gnu/libclang-16.so.1 /usr/lib/libclang-16.so
+#    - name: Prep2
+#      run: wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc 
+#           && echo "# for llvm 16 packages"  | sudo tee -a /etc/apt/sources.list
+#           && echo "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main"  | sudo tee -a /etc/apt/sources.list
+#           && echo "deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main"  | sudo tee -a /etc/apt/sources.list
+#           && cat  /etc/apt/sources.list
+#           && sudo apt-get update 
+#           && sudo apt-get install -y libclang1-16 
+#           && sudo ln -s /usr/lib/x86_64-linux-gnu/libclang-16.so.1 /usr/lib/libclang-16.so
 
    
     - name: Build
