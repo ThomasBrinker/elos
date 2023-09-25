@@ -11,6 +11,7 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
+  SPHINX_VENV: "/home/$USER/.venv/"
 
 jobs:
   build:
@@ -37,8 +38,6 @@ jobs:
            sphinx-favicon 
            sphinxcontrib-programoutput
 
-    env:
-      SPHINX_VENV: "/home/$USER/.venv/"
    
     - name: Build
       # Build your program with the given configuration
