@@ -57,6 +57,8 @@ jobs:
 #           && sudo apt-get install -y libclang1-16 
 #           && sudo ln -s /usr/lib/x86_64-linux-gnu/libclang-16.so.1 /usr/lib/libclang-16.so
 
+    - name: Prep2
+      run:  sudo ln -s /usr/lib/x86_64-linux-gnu/libclang-16.so.1 /usr/lib/libclang-16.so
    
     - name: Build
       # Build your program with the given configuration
