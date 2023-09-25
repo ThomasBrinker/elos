@@ -24,7 +24,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: awalsh128/cache-apt-pkgs-action@latest
       with:
-          packages: binutils-dev build-essential clang-format clang-tidy cmake curl expat gdb git gnuplot jq libcmocka-dev libcsv-dev   libcurl4-openssl-dev      libesmtp-dev      libiberty-dev libjson-c-dev     liblog4c-dev     libmnl-dev     libsqlite3-0   libsqlite3-dev    libssl-dev    linux-tools-generic    locales    net-tools netcat  ninja-build openssl pandoc pandoc-plantuml-filter pkg-config python-is-python3 python3-pip python3-venv sqlite3 sudo wget libclang1-16 zlib1g-dev 
+          packages: binutils-dev build-essential clang-format clang-tidy cmake curl expat gdb git gnuplot jq libcmocka-dev libcsv-dev   libcurl4-openssl-dev      libesmtp-dev      libiberty-dev libjson-c-dev     liblog4c-dev     libmnl-dev     libsqlite3-0   libsqlite3-dev    libssl-dev    linux-tools-generic    locales    net-tools netcat  ninja-build openssl pandoc pandoc-plantuml-filter pkg-config python-is-python3 python3-pip python3-venv sqlite3 sudo wget zlib1g-dev 
           version: 1.0
           
     - name: Prep
@@ -37,6 +37,15 @@ jobs:
            sphinx-copybutton 
            sphinx-favicon 
            sphinxcontrib-programoutput
+      run: wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc 
+           && echo "\n
+           # for llvm 16 packages\n
+           deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main\n
+           deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main\n
+           " | sudo tee /etc/apt/sources.list 
+           sudo apt-get update 
+           sudo apt-get install -y libclang1-16 
+           sudo ln -s /usr/lib/x86_64-linux-gnu/libclang-16.so.1 /usr/lib/libclang-16.so
 
    
     - name: Build
