@@ -48,7 +48,11 @@ jobs:
       with:
         python-version: '3.9'
         cache: 'pip' # caching pip dependencies
-    - run: pip install -r requirements.txt
+    - run: |
+        pip install -r requirements.txt
+        python -m venv env
+        . env/bin/activate 
+        echo "VIRTUAL ENV:" $VIRTUAL_ENV
           
 #    - name: Prep
 #      run: python -m venv /home/runner/.venv 
