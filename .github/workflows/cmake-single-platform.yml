@@ -12,8 +12,6 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   SPHINX_VENV: "/home/runner/.venv/"
-  CI_COMMIT_MESSAGE: Continuous Integration Build Documentation Artifacts
-  CI_COMMIT_AUTHOR: Continuous Integration
 
 jobs:
   build:
@@ -53,29 +51,8 @@ jobs:
         python -m venv ${SPHINX_VENV}
         . ${SPHINX_VENV}/bin/activate 
         echo "VIRTUAL ENV:" $VIRTUAL_ENV
-          
-#    - name: Prep
-#      run: python -m venv /home/runner/.venv 
-#           && . /home/runner/.venv/bin/activate 
-#           && python -m pip install 
-#           beautifulsoup4  
-#           sphinx 
-#           sphinx-c-autodoc 
-#           sphinx-copybutton 
-#           sphinx-favicon 
-#           sphinxcontrib-programoutput
 
-#    - name: Prep2
-#      run: wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc 
-#           && echo "# for llvm 16 packages"  | sudo tee -a /etc/apt/sources.list
-#           && echo "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main"  | sudo tee -a /etc/apt/sources.list
-#           && echo "deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main"  | sudo tee -a /etc/apt/sources.list
-#           && cat  /etc/apt/sources.list
-#           && sudo apt-get update 
-#           && sudo apt-get install -y libclang1-16 
-#           && sudo ln -s /usr/lib/x86_64-linux-gnu/libclang-16.so.1 /usr/lib/libclang-16.so
-
-    - name: Prep2
+    - name: Link Clang (hacky)
       run:  sudo ln -s /usr/lib/x86_64-linux-gnu/libclang-16.so.1 /usr/lib/libclang-16.so
    
     - name: Build
