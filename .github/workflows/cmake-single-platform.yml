@@ -36,17 +36,19 @@ jobs:
           packages: libclang1-16  binutils-dev build-essential clang-format clang-tidy cmake curl expat gdb git gnuplot jq libcmocka-dev libcsv-dev   libcurl4-openssl-dev      libesmtp-dev      libiberty-dev libjson-c-dev     liblog4c-dev     libmnl-dev     libsqlite3-0   libsqlite3-dev    libssl-dev    linux-tools-generic    locales    net-tools netcat  ninja-build openssl pandoc pandoc-plantuml-filter pkg-config python-is-python3 python3-pip python3-venv sqlite3 sudo wget zlib1g-dev 
           version: 1.0
 
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-        cache: 'pip' # caching pip dependencies
-    - run: pip install 
-           beautifulsoup4  
+    - name: Prep
+      run: echo "beautifulsoup4
            sphinx 
            sphinx-c-autodoc 
            sphinx-copybutton 
            sphinx-favicon 
-           sphinxcontrib-programoutput
+           sphinxcontrib-programoutput" > requirements.txt
+
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        cache: 'pip' # caching pip dependencies
+    - run: pip install -r requirements.txt
           
 #    - name: Prep
 #      run: python -m venv /home/runner/.venv 
