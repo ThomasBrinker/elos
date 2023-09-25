@@ -50,8 +50,8 @@ jobs:
         cache: 'pip' # caching pip dependencies
     - run: |
         pip install -r requirements.txt
-        python -m venv env
-        . env/bin/activate 
+        python -m venv ${SPHINX_VENV}
+        . ${SPHINX_VENV}/bin/activate 
         echo "VIRTUAL ENV:" $VIRTUAL_ENV
           
 #    - name: Prep
@@ -85,9 +85,7 @@ jobs:
 
     - name: Build Docs
       # Build your program with the given configuration
-      run: |
-        SPHINX_VENV=${$VIRTUAL_ENV}
-        safu/ci/build_doc.sh
+      run: safu/ci/build_doc.sh
 
     # Commit and push all changed files.
     - name: Deploy Docs
