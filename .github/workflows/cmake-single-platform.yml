@@ -61,14 +61,9 @@ jobs:
       run: safu/ci/build_doc.sh
 
     # Commit and push all changed files.
-    - name: GIT Commit Build Artifacts (coverage, dist, devdist, docs)
-      # Only run on main branch push (e.g. after pull request merge).
-      if: github.event_name == 'push'
-      run: |
-        git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
-        git config --global user.email "username@users.noreply.github.com"
-        git checkout gh_pages
-        mv safu/doc/build/* .
-        git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
-        git push
+    - name: Deploy Docs
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: gh_pages
+        folder: ${{github.workspace}}/safu/doc/build/website
 
