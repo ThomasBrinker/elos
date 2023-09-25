@@ -38,7 +38,7 @@ jobs:
 
     - name: Prep
       run: echo -e "beautifulsoup4 \n
-           sphinx \
+           sphinx \n
            sphinx-c-autodoc \n
            sphinx-copybutton \n
            sphinx-favicon \n
