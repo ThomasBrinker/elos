@@ -85,7 +85,9 @@ jobs:
 
     - name: Build Docs
       # Build your program with the given configuration
-      run: safu/ci/build_doc.sh
+      run: |
+        SPHINX_VENV=${$VIRTUAL_ENV}
+        safu/ci/build_doc.sh
 
     # Commit and push all changed files.
     - name: Deploy Docs
