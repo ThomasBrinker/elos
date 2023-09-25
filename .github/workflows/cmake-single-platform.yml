@@ -11,7 +11,7 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  SPHINX_VENV: "/home/$USER/.venv/"
+  SPHINX_VENV: "/home/runner/.venv/"
 
 jobs:
   build:
@@ -28,8 +28,8 @@ jobs:
           version: 1.0
           
     - name: Prep
-      run: python -m venv /home/$USER/.venv 
-           && . /home/$USER/.venv/bin/activate 
+      run: python -m venv /home/runner/.venv 
+           && . /home/runner/.venv/bin/activate 
            && python -m pip install 
            beautifulsoup4  
            sphinx 
