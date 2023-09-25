@@ -37,6 +37,8 @@ jobs:
            sphinx-copybutton 
            sphinx-favicon 
            sphinxcontrib-programoutput
+
+    - name: Prep2
       run: wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc 
            && echo "\n
            # for llvm 16 packages\n
