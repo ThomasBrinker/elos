@@ -1,5 +1,7 @@
 #!/bin/bash -eu
 
+set -x
+
 CMD_PATH=$(cd $(dirname $0) && pwd)
 BASE_DIR=${CMD_PATH%/*}
 
