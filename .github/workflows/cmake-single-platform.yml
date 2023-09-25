@@ -12,6 +12,8 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   SPHINX_VENV: "/home/runner/.venv/"
+  CI_COMMIT_MESSAGE: Continuous Integration Build Documentation Artifacts
+  CI_COMMIT_AUTHOR: Continuous Integration
 
 jobs:
   build:
@@ -57,3 +59,16 @@ jobs:
     - name: Build Docs
       # Build your program with the given configuration
       run: safu/ci/build_doc.sh
+
+    # Commit and push all changed files.
+    - name: GIT Commit Build Artifacts (coverage, dist, devdist, docs)
+      # Only run on main branch push (e.g. after pull request merge).
+      if: github.event_name == 'push'
+      run: |
+        git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+        git config --global user.email "username@users.noreply.github.com"
+        git checkout gh_pages
+        mv safu/doc/build/* .
+        git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
+        git push
+
